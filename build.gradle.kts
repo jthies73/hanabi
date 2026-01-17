@@ -17,6 +17,7 @@ repositories { // Sources of dependencies. See 1️⃣
 dependencies { // All the libraries you want to use. See 3️⃣
     // Copy dependencies' names after you find them in a repository
     implementation(kotlin("stdlib")) // The Kotlin standard library
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     testImplementation(kotlin("test")) // The Kotlin test library
 }
 
