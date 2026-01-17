@@ -1,4 +1,18 @@
-# Ignore Kotlin build and cache files
-.kotlin
-/build/
-/.gradle
+# Gradle
+.gradle/
+build/
+
+# Kotlin
+.kotlin/
+*.class
+*.jar
+*.war
+*.ear
+
+# VS Code
+.vscode/settings.json
+.vscode/launch.json
+.history/
+
+# macOS
+.DS_Store
