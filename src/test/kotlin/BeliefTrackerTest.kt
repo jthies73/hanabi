@@ -25,15 +25,31 @@ class BeliefTrackerTest {
         val tracker = BeliefTracker(0, 5)
         val publicState = createTestPublicState()
         
+        // Simulate a hint that matches cards at indices 1 and 3
         val hint = HintColor(1, 0, Color.RED)
-        tracker.updateFromAction(hint, publicState)
+        val hintedIndices = listOf(1, 3)
+        tracker.updateFromAction(hint, publicState, hintedIndices)
         
         val knowledge = tracker.getKnowledge()
-        for (k in knowledge) {
-            assertTrue(k.isClued, "All cards should be marked as clued after hint")
-            assertEquals(1, k.possibleColors.size, "Should only have RED as possible color")
-            assertTrue(k.possibleColors.contains(Color.RED), "RED should be the possible color")
-        }
+        
+        // Cards 1 and 3 should be marked as clued and restricted to RED
+        assertTrue(knowledge[1].isClued, "Card 1 should be clued")
+        assertEquals(1, knowledge[1].possibleColors.size, "Card 1 should only have RED as possible color")
+        assertTrue(knowledge[1].possibleColors.contains(Color.RED), "Card 1 should have RED")
+        
+        assertTrue(knowledge[3].isClued, "Card 3 should be clued")
+        assertEquals(1, knowledge[3].possibleColors.size, "Card 3 should only have RED as possible color")
+        assertTrue(knowledge[3].possibleColors.contains(Color.RED), "Card 3 should have RED")
+        
+        // Cards 0, 2, 4 should NOT have RED as a possibility (negative inference)
+        assertFalse(knowledge[0].isClued, "Card 0 should not be clued")
+        assertFalse(knowledge[0].possibleColors.contains(Color.RED), "Card 0 should not have RED")
+        
+        assertFalse(knowledge[2].isClued, "Card 2 should not be clued")
+        assertFalse(knowledge[2].possibleColors.contains(Color.RED), "Card 2 should not have RED")
+        
+        assertFalse(knowledge[4].isClued, "Card 4 should not be clued")
+        assertFalse(knowledge[4].possibleColors.contains(Color.RED), "Card 4 should not have RED")
     }
 
     @Test
@@ -41,15 +57,31 @@ class BeliefTrackerTest {
         val tracker = BeliefTracker(0, 5)
         val publicState = createTestPublicState()
         
+        // Simulate a hint that matches cards at indices 0 and 2
         val hint = HintRank(1, 0, Rank(3))
-        tracker.updateFromAction(hint, publicState)
+        val hintedIndices = listOf(0, 2)
+        tracker.updateFromAction(hint, publicState, hintedIndices)
         
         val knowledge = tracker.getKnowledge()
-        for (k in knowledge) {
-            assertTrue(k.isClued, "All cards should be marked as clued after hint")
-            assertEquals(1, k.possibleRanks.size, "Should only have rank 3 as possible")
-            assertTrue(k.possibleRanks.contains(Rank(3)), "Rank 3 should be the possible rank")
-        }
+        
+        // Cards 0 and 2 should be marked as clued and restricted to rank 3
+        assertTrue(knowledge[0].isClued, "Card 0 should be clued")
+        assertEquals(1, knowledge[0].possibleRanks.size, "Card 0 should only have rank 3 as possible")
+        assertTrue(knowledge[0].possibleRanks.contains(Rank(3)), "Card 0 should have rank 3")
+        
+        assertTrue(knowledge[2].isClued, "Card 2 should be clued")
+        assertEquals(1, knowledge[2].possibleRanks.size, "Card 2 should only have rank 3 as possible")
+        assertTrue(knowledge[2].possibleRanks.contains(Rank(3)), "Card 2 should have rank 3")
+        
+        // Cards 1, 3, 4 should NOT have rank 3 as a possibility (negative inference)
+        assertFalse(knowledge[1].isClued, "Card 1 should not be clued")
+        assertFalse(knowledge[1].possibleRanks.contains(Rank(3)), "Card 1 should not have rank 3")
+        
+        assertFalse(knowledge[3].isClued, "Card 3 should not be clued")
+        assertFalse(knowledge[3].possibleRanks.contains(Rank(3)), "Card 3 should not have rank 3")
+        
+        assertFalse(knowledge[4].isClued, "Card 4 should not be clued")
+        assertFalse(knowledge[4].possibleRanks.contains(Rank(3)), "Card 4 should not have rank 3")
     }
 
     @Test

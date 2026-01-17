@@ -1,5 +1,4 @@
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
 import ai.SmartBot
 import engine.GameEngine
 import engine.ActionResult
@@ -23,9 +22,6 @@ suspend fun main() = coroutineScope {
     for (playerId in 1 until numPlayers) {
         bots[playerId] = SmartBot(playerId, initialHandSize)
     }
-    
-    // Create input channel for query commands
-    val inputChannel = Channel<String>(Channel.UNLIMITED)
     
     ui.displayCommands()
     
@@ -85,12 +81,6 @@ suspend fun main() = coroutineScope {
             // Bot player's turn
             ui.displayGameState(state, humanPlayerId)
             println()
-            
-            // Check for query interrupts before bot action
-            val queryInput = inputChannel.tryReceive().getOrNull()
-            if (queryInput != null && queryInput.startsWith("query ")) {
-                handleQuery(queryInput, bots, ui, humanPlayerId)
-            }
             
             val bot = bots[currentPlayer]!!
             val publicState = game.getPublicState(currentPlayer)
