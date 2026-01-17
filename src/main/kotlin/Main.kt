@@ -57,9 +57,13 @@ suspend fun main() = coroutineScope {
                             displayActionResult(action, state, ui)
                             validAction = true
                             
-                            // Update bot beliefs
+                            // Update bot beliefs with hinted indices if it's a hint
+                            val hintedIndices = if (action is GiveHint) {
+                                getHintedIndices(action, state)
+                            } else null
+                            
                             for ((botId, bot) in bots) {
-                                bot.updateBeliefs(action, game.getPublicState(botId))
+                                bot.updateBeliefs(action, game.getPublicState(botId), hintedIndices)
                             }
                         }
                         is ActionResult.Error -> {
@@ -99,9 +103,13 @@ suspend fun main() = coroutineScope {
                 is ActionResult.Success -> {
                     displayActionResult(action, state, ui)
                     
-                    // Update all bot beliefs
+                    // Update all bot beliefs with hinted indices if it's a hint
+                    val hintedIndices = if (action is GiveHint) {
+                        getHintedIndices(action, state)
+                    } else null
+                    
                     for ((botId, botInstance) in bots) {
-                        botInstance.updateBeliefs(action, game.getPublicState(botId))
+                        botInstance.updateBeliefs(action, game.getPublicState(botId), hintedIndices)
                     }
                 }
                 is ActionResult.Error -> {
@@ -190,6 +198,14 @@ fun parsePlayerName(name: String, humanPlayerId: Int): Int? {
             name.substring(3).toIntOrNull()
         }
         else -> name.toIntOrNull()
+    }
+}
+
+fun getHintedIndices(action: GiveHint, state: engine.FullGameState): List<Int> {
+    val targetHand = state.hands[action.targetPlayerId] ?: return emptyList()
+    return when (action) {
+        is HintColor -> targetHand.withIndex().filter { it.value.color == action.color }.map { it.index }
+        is HintRank -> targetHand.withIndex().filter { it.value.rank == action.rank }.map { it.index }
     }
 }
 

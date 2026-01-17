@@ -8,8 +8,8 @@ import model.*
 class SmartBot(private val playerId: Int, initialHandSize: Int) {
     private val beliefTracker = BeliefTracker(playerId, initialHandSize)
 
-    fun updateBeliefs(action: GameAction, publicState: PublicGameState) {
-        beliefTracker.updateFromAction(action, publicState)
+    fun updateBeliefs(action: GameAction, publicState: PublicGameState, hintedIndices: List<Int>? = null) {
+        beliefTracker.updateFromAction(action, publicState, hintedIndices)
         beliefTracker.updateHandSize(publicState.myHandSize)
     }
 

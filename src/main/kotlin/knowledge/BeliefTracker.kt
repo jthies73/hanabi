@@ -6,16 +6,16 @@ import model.*
 class BeliefTracker(private val myPlayerId: Int, initialHandSize: Int) {
     private var handKnowledge = List(initialHandSize) { CardKnowledge() }
 
-    fun updateFromAction(action: GameAction, publicState: PublicGameState) {
+    fun updateFromAction(action: GameAction, publicState: PublicGameState, hintedIndices: List<Int>? = null) {
         when (action) {
             is HintColor -> {
                 if (action.targetPlayerId == myPlayerId) {
-                    processColorHint(action.color, publicState)
+                    processColorHint(action.color, publicState, hintedIndices)
                 }
             }
             is HintRank -> {
                 if (action.targetPlayerId == myPlayerId) {
-                    processRankHint(action.rank, publicState)
+                    processRankHint(action.rank, publicState, hintedIndices)
                 }
             }
             is PlayCard -> {
@@ -34,33 +34,79 @@ class BeliefTracker(private val myPlayerId: Int, initialHandSize: Int) {
         updateFromVisibleCards(publicState)
     }
 
-    private fun processColorHint(color: Color, publicState: PublicGameState) {
-        // We need to determine which cards were hinted from the action history
-        // For simplicity, we'll mark all cards that match the color
+    private fun processColorHint(color: Color, publicState: PublicGameState, hintedIndices: List<Int>?) {
         val newKnowledge = handKnowledge.toMutableList()
         
-        for (i in handKnowledge.indices) {
-            // Note: In a real implementation, we'd track which specific cards were pointed to
-            // For now, we assume the hint points to all matching cards in a sweep
-            newKnowledge[i] = handKnowledge[i].copy(
-                possibleColors = setOf(color),
-                isClued = true,
-                positiveColorClues = handKnowledge[i].positiveColorClues + color
-            )
+        if (hintedIndices != null) {
+            // We have explicit information about which cards were hinted
+            for (i in handKnowledge.indices) {
+                if (i in hintedIndices) {
+                    // Positive hint: this card IS this color
+                    newKnowledge[i] = handKnowledge[i].copy(
+                        possibleColors = setOf(color),
+                        isClued = true,
+                        positiveColorClues = handKnowledge[i].positiveColorClues + color
+                    )
+                } else {
+                    // Negative hint: this card is NOT this color
+                    val newColors = handKnowledge[i].possibleColors - color
+                    if (newColors.isNotEmpty()) {
+                        newKnowledge[i] = handKnowledge[i].copy(
+                            possibleColors = newColors
+                        )
+                    }
+                }
+            }
+        } else {
+            // Fallback: assume all cards that could be this color were hinted
+            for (i in handKnowledge.indices) {
+                if (handKnowledge[i].possibleColors.contains(color)) {
+                    newKnowledge[i] = handKnowledge[i].copy(
+                        possibleColors = setOf(color),
+                        isClued = true,
+                        positiveColorClues = handKnowledge[i].positiveColorClues + color
+                    )
+                }
+            }
         }
         
         handKnowledge = newKnowledge
     }
 
-    private fun processRankHint(rank: Rank, publicState: PublicGameState) {
+    private fun processRankHint(rank: Rank, publicState: PublicGameState, hintedIndices: List<Int>?) {
         val newKnowledge = handKnowledge.toMutableList()
         
-        for (i in handKnowledge.indices) {
-            newKnowledge[i] = handKnowledge[i].copy(
-                possibleRanks = setOf(rank),
-                isClued = true,
-                positiveRankClues = handKnowledge[i].positiveRankClues + rank
-            )
+        if (hintedIndices != null) {
+            // We have explicit information about which cards were hinted
+            for (i in handKnowledge.indices) {
+                if (i in hintedIndices) {
+                    // Positive hint: this card IS this rank
+                    newKnowledge[i] = handKnowledge[i].copy(
+                        possibleRanks = setOf(rank),
+                        isClued = true,
+                        positiveRankClues = handKnowledge[i].positiveRankClues + rank
+                    )
+                } else {
+                    // Negative hint: this card is NOT this rank
+                    val newRanks = handKnowledge[i].possibleRanks - rank
+                    if (newRanks.isNotEmpty()) {
+                        newKnowledge[i] = handKnowledge[i].copy(
+                            possibleRanks = newRanks
+                        )
+                    }
+                }
+            }
+        } else {
+            // Fallback: assume all cards that could be this rank were hinted
+            for (i in handKnowledge.indices) {
+                if (handKnowledge[i].possibleRanks.contains(rank)) {
+                    newKnowledge[i] = handKnowledge[i].copy(
+                        possibleRanks = setOf(rank),
+                        isClued = true,
+                        positiveRankClues = handKnowledge[i].positiveRankClues + rank
+                    )
+                }
+            }
         }
         
         handKnowledge = newKnowledge
