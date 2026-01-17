@@ -1,0 +1,4 @@
+# Ignore Kotlin build and cache files
+.kotlin
+/build/
+/.gradle
