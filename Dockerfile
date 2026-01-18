@@ -1,6 +1,6 @@
 # --- Stage 1: Build Stage ---
 # We use a Gradle image with a JDK to build the application
-FROM gradle:8.5-jdk17 AS builder
+FROM gradle:9.3-jdk17 AS builder
 
 # Set the working directory inside the builder container
 WORKDIR /app
