@@ -1,0 +1,24 @@
+# 1. Use a base image with the full JDK and Gradle installed.
+# The official Gradle image is great, or use Microsoft's specialized devcontainer image.
+FROM eclipse-temurin:latest
+
+# 2. Install common development tools
+# (Git is usually included, but it's good practice to ensure utilities exist)
+RUN apt-get update && \
+    apt-get install -y git curl zip unzip && \
+    rm -rf /var/lib/apt/lists/*
+
+# 3. (Optional) Create a non-root user or configure permissions
+# The 'gradle' image creates a 'gradle' user. VS Code handles this mapping automatically usually.
+
+# 4. Set the working directory
+WORKDIR /workspace
+
+# 5. Do NOT copy source code here.
+# Devcontainers automatically "mount" your local folder into /workspace.
+
+# Make the Gradle wrapper available on PATH so you can run `gradlew` directly
+ENV PATH="${PATH}:/workspace"
+
+# 6. Do NOT set an ENTRYPOINT.
+# VS Code needs to override the entrypoint to keep the container running properly.
