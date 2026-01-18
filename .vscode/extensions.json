@@ -1,0 +1,7 @@
+// For more details, see https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin
+{
+    "recommendations": [
+        "fwcd.kotlin",
+        "mathiasfrohlich.kotlin"
+    ]
+}

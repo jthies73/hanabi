@@ -1,0 +1,9 @@
+# Ignore Kotlin build and cache files
+.kotlin
+/build/
+/.gradle/
+/caches/
+/idea/
+/out/
+.DS_Store
+*.iml

@@ -1,0 +1,28 @@
+{
+  "name": "Kotlin Gradle Dev",
+  "build": {
+    "dockerfile": "../Dockerfile.dev"
+  },
+  "runArgs": ["--name", "hanabi-dev"],
+  "remoteUser": "root",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "fwcd.kotlin",
+        "vscjava.vscode-gradle"
+      ]
+    },
+    "antigravity": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "fwcd.kotlin",
+        "vscjava.vscode-gradle",
+        "mathiasfrohlich.kotlin"
+      ]
+    }
+  },
+  "postCreateCommand": "gradlew dependencies"
+}
