@@ -11,16 +11,25 @@
 			"installMaven": "false",
 			"installGradle": "true"
 		}
-	}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "java -version",
+	"postCreateCommand": "curl -s https://get.sdkman.io | bash && bash -c 'source ~/.sdkman/bin/sdkman-init.sh && sdk install kotlin'",
 
 	// Configure tool-specific properties.
-	// "customizations": {},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"vscjava.vscode-java-pack",
+				"vscjava.vscode-gradle",
+				"fwcd.kotlin",
+				"mathiasfrohlich.Kotlin"
+			]
+		}
+	}
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
