@@ -1,36 +1,27 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/java
 {
-	"name": "Java",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/java:1-21-bullseye",
-
-	"features": {
-		"ghcr.io/devcontainers/features/java:1": {
-			"version": "none",
-			"installMaven": "false",
-			"installGradle": "true"
-		}
-	},
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "curl -s https://get.sdkman.io | bash && bash -c 'source ~/.sdkman/bin/sdkman-init.sh && sdk install kotlin'",
-
-	// Configure tool-specific properties.
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"vscjava.vscode-java-pack",
-				"vscjava.vscode-gradle",
-				"fwcd.kotlin",
-				"mathiasfrohlich.Kotlin"
-			]
-		}
-	}
-
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+  "name": "Kotlin Gradle Dev",
+  "build": {
+    "dockerfile": "../Dockerfile.dev"
+  },
+  "runArgs": ["--name", "hanabi-dev"],
+  "remoteUser": "root",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "fwcd.kotlin",
+        "vscjava.vscode-gradle"
+      ]
+    },
+    "antigravity": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "fwcd.kotlin",
+        "vscjava.vscode-gradle"
+      ]
+    }
+  },
+  "postCreateCommand": "./gradlew dependencies"
 }
