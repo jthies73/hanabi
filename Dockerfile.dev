@@ -1,6 +1,6 @@
 # 1. Use a base image with the full JDK and Gradle installed.
 # The official Gradle image is great, or use Microsoft's specialized devcontainer image.
-FROM eclipse-temurin:17-jdk-jammy
+FROM eclipse-temurin:25.0.1_8-jdk-jammy
 
 # 2. Install common development tools
 # (Git is usually included, but it's good practice to ensure utilities exist)
