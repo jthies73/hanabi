@@ -21,7 +21,7 @@ RUN gradle clean build -x test --no-daemon
 
 # --- Stage 2: Runtime Stage ---
 # We use a smaller, lightweight JRE image for the final container
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 
 WORKDIR /app
 
