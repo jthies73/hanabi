@@ -5,7 +5,7 @@ FROM eclipse-temurin:latest
 # 2. Install common development tools
 # (Git is usually included, but it's good practice to ensure utilities exist)
 RUN apt-get update && \
-    apt-get install -y git curl zip unzip && \
+    apt-get install -y git curl wget zip unzip && \
     rm -rf /var/lib/apt/lists/*
 
 # 3. (Optional) Create a non-root user or configure permissions
